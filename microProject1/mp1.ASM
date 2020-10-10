@@ -19,6 +19,9 @@ section '.data' data readable writable
         secondNum       dd ?
         thirdNum        dd ?
         fourthNum       dd ?
+        temp1           dd ?
+        temp2           dd ?
+        tmpStack        dd ?
         result          dd 0
         NULL = 0
 
@@ -43,7 +46,7 @@ section '.code' code readable executable
                 primeCompare thirdNum, fourthNum ; 3 & 4
                 add [result], ebx
 
-                cmp ebx, 0
+                cmp [result], 0
                 je resultPositive
                 jmp resultNegative
 
@@ -59,13 +62,71 @@ section '.code' code readable executable
 
 
                 endProg:
-                        push [result]
-                        push digitIn
-                        call [printf]
-
                         call [getch]
                         push NULL
                         call [ExitProcess]
+
+;--------------------------------------------------
+coprimeProc:
+        mov [tmpStack], esp
+        pop ebx
+        pop eax
+        primeLoop:
+        ; the loop itself
+        ;
+        ; while (num1 >= num2)
+        ; num1 -= num2;
+        ; if (num1 == 0)
+        ; return num2 == 1;
+        ;
+        ; while (num2 >= num1)
+        ; num2 -= num1;
+        ; if (num2 == 0)
+        ; return num1 == 1;
+
+
+        modLoop1:
+                cmp eax, ebx
+                jl endModLoop1
+                sub eax, ebx
+                jmp modLoop1
+
+        endModLoop1:
+                cmp eax, 0
+                je endPrimeLoop1
+
+        modLoop2:
+                cmp ebx, eax
+                jl endModLoop2
+                sub ebx, eax
+                jmp modLoop2
+
+        endModLoop2:
+                cmp ebx, 0
+                je endPrimeLoop2
+
+
+        jmp primeLoop
+
+      endPrimeLoop1:
+        cmp ebx, 1
+        je endPrimeLoopNo
+        jmp endPrimeLoopYes
+
+      endPrimeLoop2:
+        cmp eax, 1
+        je endPrimeLoopNo
+        jmp endPrimeLoopYes
+
+      endPrimeLoopYes:
+        mov ebx, 0
+        jmp endPrime
+      endPrimeLoopNo:
+        mov ebx, 1
+        jmp endPrime
+      endPrime:
+        mov esp, [tmpStack]
+        ret
 
 
 section 'idata' import data readable
