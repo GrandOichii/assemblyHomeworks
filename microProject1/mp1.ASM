@@ -1,5 +1,3 @@
-; task : разработать программу, решающую, €вл€ютс€ ли 4 введенных числа простыми
-
 format PE console
 
 entry start
@@ -13,6 +11,7 @@ section '.data' data readable writable
         strEnterPrompt  db 'Enter num #%d: ', 0
         positiveResStr  db 'The four numbers are coprime', 10, 0
         negativeResStr  db 'The four numbers are not coprime', 10, 0
+        badNumStr       db 'Numbers have to be greater than 0', 0
         digitIn         db '%d', 0
 
         firstNum        dd ?    ; first number
@@ -30,6 +29,18 @@ section '.code' code readable executable
                 enterNum 2, secondNum   ; read the second num
                 enterNum 3, thirdNum    ; read the third num
                 enterNum 4, fourthNum   ; read the fourth num
+
+                ; check that all numbers are > 0
+                cmp [firstNum], 0
+                jle terminateProg
+                cmp [secondNum], 0
+                jle terminateProg
+                cmp [thirdNum], 0
+                jle terminateProg
+                cmp [fourthNum], 0
+                jle terminateProg
+
+
 
                 primeCompare firstNum, secondNum ; 1 & 2
                 add [result], ebx
@@ -60,6 +71,14 @@ section '.code' code readable executable
 
 
                 endProg:
+                        call [getch]
+                        push NULL
+                        call [ExitProcess]
+
+                terminateProg:
+                        push badNumStr
+                        call [printf]
+
                         call [getch]
                         push NULL
                         call [ExitProcess]
@@ -115,6 +134,9 @@ coprimeProc:                            ; compares two numbers, if they are copr
       endPrime:
         mov esp, [tmpStack]
         ret
+
+;----------------------------------------------------------------------------
+
 
 
 section 'idata' import data readable
