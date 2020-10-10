@@ -15,23 +15,21 @@ section '.data' data readable writable
         negativeResStr  db 'The four numbers are not coprime', 10, 0
         digitIn         db '%d', 0
 
-        firstNum        dd ?
-        secondNum       dd ?
-        thirdNum        dd ?
-        fourthNum       dd ?
-        temp1           dd ?
-        temp2           dd ?
-        tmpStack        dd ?
-        result          dd 0
-        NULL = 0
+        firstNum        dd ?    ; first number
+        secondNum       dd ?    ; second number
+        thirdNum        dd ?    ; third number
+        fourthNum       dd ?    ; fourth number
+        tmpStack        dd ?    ; the temporary value of the stack (for procedures)
+        result          dd 0    ; result value (the sum of all calls)
+        NULL = 0                ; null value (for ExitProcess)
 
 
 section '.code' code readable executable
         start:
-                enterNum 1, firstNum
-                enterNum 2, secondNum
-                enterNum 3, thirdNum
-                enterNum 4, fourthNum
+                enterNum 1, firstNum    ; read the first num
+                enterNum 2, secondNum   ; read the second num
+                enterNum 3, thirdNum    ; read the third num
+                enterNum 4, fourthNum   ; read the fourth num
 
                 primeCompare firstNum, secondNum ; 1 & 2
                 add [result], ebx
@@ -46,6 +44,9 @@ section '.code' code readable executable
                 primeCompare thirdNum, fourthNum ; 3 & 4
                 add [result], ebx
 
+                cmp [result], 0
+                je resultPositive
+                jmp resultNegative
 
                 resultPositive:
                         push positiveResStr
