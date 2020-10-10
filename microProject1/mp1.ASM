@@ -65,53 +65,43 @@ section '.code' code readable executable
                         call [ExitProcess]
 
 ;--------------------------------------------------
-coprimeProc:
+coprimeProc:                            ; compares two numbers, if they are coprime sets ebx to 0, else sets ebx to 1
         mov [tmpStack], esp
-        pop ebx
+        pop ebx                         ; pop the 2 values from the stack
         pop eax
         primeLoop:
-        ; the loop itself
-        ;
-        ; while (num1 >= num2)
-        ; num1 -= num2;
-        ; if (num1 == 0)
-        ; return num2 == 1;
-        ;
-        ; while (num2 >= num1)
-        ; num2 -= num1;
-        ; if (num2 == 0)
-        ; return num1 == 1;
+
 
 
         modLoop1:
-                cmp eax, ebx
-                jl endModLoop1
-                sub eax, ebx
-                jmp modLoop1
+                cmp eax, ebx            ; compare eax and ebx
+                jl endModLoop1          ; if eax < ebx, end first subtraction loop
+                sub eax, ebx            ; eax -= ebx
+                jmp modLoop1            ; jump back to the start of the subtraction loop
 
         endModLoop1:
-                cmp eax, 0
+                cmp eax, 0              ; if eax == 0 then end the loop
                 je endPrimeLoop1
 
         modLoop2:
-                cmp ebx, eax
-                jl endModLoop2
-                sub ebx, eax
-                jmp modLoop2
+                cmp ebx, eax            ; compare ebx and eax
+                jl endModLoop2          ; if eax > ebx, end second subtraction loop
+                sub ebx, eax            ; ebx -= eax
+                jmp modLoop2            ; jump back to the start of the subtraction loop
 
         endModLoop2:
-                cmp ebx, 0
+                cmp ebx, 0              ; if ebx == 0 then end the loop
                 je endPrimeLoop2
 
 
-        jmp primeLoop
+        jmp primeLoop                   ; end of the main loop
 
       endPrimeLoop1:
-        cmp ebx, 1
+        cmp ebx, 1                      ; if ebx == 1 then return 1, else return 0
         je endPrimeLoopNo
         jmp endPrimeLoopYes
 
-      endPrimeLoop2:
+      endPrimeLoop2:                    ; if eax == 1 then return 1, else return 0
         cmp eax, 1
         je endPrimeLoopNo
         jmp endPrimeLoopYes
