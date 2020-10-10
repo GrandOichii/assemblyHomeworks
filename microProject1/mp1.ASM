@@ -11,8 +11,8 @@ include 'macro.inc'
 section '.data' data readable writable
 
         strEnterPrompt  db 'Enter num #%d: ', 0
-        positiveResStr  db 'The four numbers are prime to each other I think', 10, 0
-        negativeResStr  db 'The four numbers are not prime to each other I think', 10, 0
+        positiveResStr  db 'The four numbers are coprime', 10, 0
+        negativeResStr  db 'The four numbers are not coprime', 10, 0
         digitIn         db '%d', 0
 
         firstNum        dd ?
@@ -46,9 +46,6 @@ section '.code' code readable executable
                 primeCompare thirdNum, fourthNum ; 3 & 4
                 add [result], ebx
 
-                cmp [result], 0
-                je resultPositive
-                jmp resultNegative
 
                 resultPositive:
                         push positiveResStr
