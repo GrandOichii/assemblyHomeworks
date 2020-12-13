@@ -56,9 +56,9 @@ void cook() {
 void eat(int i) {
     if (s.isEmpty())
         cook();
-    cout << "Cannbial number " + to_string(i) + " has started eating\t" << s.getV() << endl;
+    cout << "Cannbial number " + to_string(i) + " has started eating\t" << endl;
     s.wait();
-    cout << "Cannbial number " + to_string(i) + " has finished eating\t" << s.getV() << endl;
+    cout << "Cannbial number " + to_string(i) + " has finished eating\t" << endl;
 }
 
 
